@@ -35,3 +35,34 @@ jobs:
         run: |
           terraform init -backend-config="./config/${{env.USER_STAGE}}/backend.conf"
           terraform apply plan
+
+  deployk8s:
+    needs: release
+    runs-on: ubuntu-latest
+    env:
+      USER_STAGE: "WNowak"
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+      CLUSTER_RESOURCE_GROUP: "rg-WNowak-we-01"
+      CLUSTER_NAME: "aks-WNowak-we-01"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURESPN }}
+
+      - uses: azure/aks-set-context@v2.1
+        with:
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+          admin: true
+
+      - uses: azure/k8s-deploy@v1
+        with:
+          manifests: |
+            ${{ github.workspace }}/manifest/deployment1.yaml
+          namespace: default
