@@ -1,3 +1,3 @@
-location                = "westeurope"
-locationShort           = "we"
-stage                   = "djana"
+location      = "westeurope"
+locationShort = "we"
+stage         = "djana"
