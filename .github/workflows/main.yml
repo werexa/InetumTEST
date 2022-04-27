@@ -15,7 +15,7 @@ jobs:
           terraform init -backend=false
           terraform fmt -check
           terraform validate
-release:
+  release:
     needs: validate
     runs-on: ubuntu-latest
     env:
@@ -26,12 +26,11 @@ release:
       ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
     steps:
       - uses: actions/checkout@v3
-     
       - name: Create terraform plan
         run: |
           terraform init -backend-config="./config/${{env.USER_STAGE}}/backend.conf"
           terraform plan -var-file="./config/${{env.USER_STAGE}}/env.tfvars" -out plan
-     
+
       - name: Apply terraform plan
         run: |
           terraform init -backend-config="./config/${{env.USER_STAGE}}/backend.conf"
