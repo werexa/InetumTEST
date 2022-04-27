@@ -1,16 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-name: learn-girhub-actions
-on: [push]
-jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-    - run: npm install -g bats 
-    - run: bats -v
 name: 01-Validate-and-Deploy-IaC
 on: [push]
 jobs:
