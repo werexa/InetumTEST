@@ -11,3 +11,20 @@ jobs:
         node-version: '14'
     - run: npm install -g bats 
     - run: bats -v
+
+name: 01-Validate-and-Deploy-IaC
+on: [push]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.9
+ 
+      - name: Validate and check terraform format
+        run: |
+          terraform init -backend=false
+          terraform fmt -check
+          terraform validate
